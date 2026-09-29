@@ -2,8 +2,9 @@ services:
   floci:
     image: ${FLOCI_IMAGE:-floci/floci:latest}
     container_name: lomax-floci
+    ports:
+      - "4566:4566" # API AWS + data-plane ECR (el daemon Docker del host hace push aquí; el proxy sigue siendo la única entrada de la app :8080)
     expose:
-      - "4566"
       - "7001-7099"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -11,6 +12,7 @@ services:
     environment:
       FLOCI_STORAGE_MODE: ${FLOCI_STORAGE_MODE:-persistent}
       FLOCI_STORAGE_PERSISTENT_PATH: /app/data
+      FLOCI_SERVICES_ECR_URI_STYLE: path # localhost:<puerto>/cuenta/region/repo (el daemon solo acepta HTTP en localhost literal)
       FLOCI_SERVICES_DOCKER_NETWORK: lomax_lomax_net
       FLOCI_SERVICES_EKS_DOCKER_NETWORK: lomax_lomax_net
       FLOCI_SERVICES_RDS_PROXY_BASE_PORT: "7001"

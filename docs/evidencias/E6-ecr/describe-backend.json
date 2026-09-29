@@ -1,0 +1,15 @@
+{
+    "imageDetails": [
+        {
+            "registryId": "000000000000",
+            "repositoryName": "lomax-backend",
+            "imageDigest": "sha256:4bf19bb0e014e1f9bf23d0f52922c3d52e299373a1790178a691ec56f24ca65c",
+            "imageTags": [
+                "37137b4"
+            ],
+            "imageSizeInBytes": 0,
+            "imagePushedAt": 1790691146,
+            "imageManifestMediaType": "application/vnd.oci.image.index.v1+json"
+        }
+    ]
+}
