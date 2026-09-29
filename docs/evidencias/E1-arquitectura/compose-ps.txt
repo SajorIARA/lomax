@@ -1,0 +1,5 @@
+lomax-backend Up 13 minutes
+lomax-floci Up 8 minutes (healthy)
+lomax-frontend Up 17 minutes
+lomax-proxy Up 21 minutes
+lomax-tools Up 21 minutes

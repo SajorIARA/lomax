@@ -7,11 +7,20 @@ spec:
   template:
     metadata: {labels: {app: lomax-backend}}
     spec:
+      hostAliases: # k3s no resuelve el alias de compose; IP de lomax-floci en lomax_net
+      - {ip: "192.168.96.2", hostnames: ["floci"]}
       containers:
       - name: backend
+        # URI hostname-style: el mirror containerd de Floci la resuelve a su data-plane interno
         image: 000000000000.dkr.ecr.us-east-1.localhost:4566/lomax-backend:latest
         ports: [{containerPort: 3000}]
-        env: [{name: AWS_ENDPOINT_URL, value: "http://floci:4566"}]
+        env:
+        - {name: AWS_ENDPOINT_URL, value: "http://floci:4566"}
+        - {name: AWS_REGION, value: "us-east-1"}
+        - {name: AWS_ACCESS_KEY_ID, value: "test"}
+        - {name: AWS_SECRET_ACCESS_KEY, value: "test"}
+        - {name: DATABASE_URL, value: "postgresql://lomax:lomax123@floci:7001/lomax"}
+        - {name: BACKEND_PORT, value: "3000"}
 ---
 apiVersion: v1
 kind: Service
@@ -29,6 +38,8 @@ spec:
   template:
     metadata: {labels: {app: lomax-frontend}}
     spec:
+      hostAliases:
+      - {ip: "192.168.96.2", hostnames: ["floci"]}
       containers:
       - name: frontend
         image: 000000000000.dkr.ecr.us-east-1.localhost:4566/lomax-frontend:latest
