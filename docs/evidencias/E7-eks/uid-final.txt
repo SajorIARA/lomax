@@ -1,0 +1,4 @@
+lomax-backend-775dd6bcdb-2twm9 uid=e46c44d8-7544-4e6f-9b29-cffe9222100b
+lomax-backend-775dd6bcdb-vd4h8 uid=5e02d3c0-3a36-4231-b57f-5e233f078a24
+lomax-backend-775dd6bcdb-wxctm uid=d78199ab-5da7-4623-bfe5-76a26abbfbd0
+lomax-frontend-6cb66f7445-dlbgd uid=c047ba40-93f5-4061-a499-3488440be015
