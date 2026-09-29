@@ -1,0 +1,53 @@
+== GET /api/categorias (200, 3) ==
+500
+<!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+
+== GET /api/productos (200, 20 PUBLICADOS) ==
+500
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import json; d=json.load(open('/tmp/opencode/p.json')); print(len(d)); from collections import Counter; print(Counter(x['categoria'] for x in d))
+                   ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/json/__init__.py", line 298, in load
+    return loads(fp.read(),
+        cls=cls, object_hook=object_hook,
+        parse_float=parse_float, parse_int=parse_int,
+        parse_constant=parse_constant, object_pairs_hook=object_pairs_hook, **kw)
+  File "/usr/lib/python3.14/json/__init__.py", line 352, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/usr/lib/python3.14/json/decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/json/decoder.py", line 363, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+== GET /api/productos/1 (200 detalle+atributos) ==
+500
+<!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the s
+== GET /api/productos/1/imagen?tipo=thumb (200 jpeg) ==
+500 text/html; charset=utf-8 265B
+== GET original (200) ==
+500
+== POST duplicado (409) ==
+500
+== POST precio negativo (400) ==
+400
+== POST categoria inexistente (400) ==
+500
+== POST imagen a inexistente (404) ==
+500
+== GET inexistente (404) ==
+500
+== formato no permitido (415) ==
+500
+== frontend / (200) ==
+200
