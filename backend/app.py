@@ -58,18 +58,32 @@ def db_exec(q, params=(), fetch=None):
         return None
 
 def init_db():
-    db_exec("""CREATE TABLE IF NOT EXISTS categorias(
-      id INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT UNIQUE NOT NULL)""")
-    db_exec("""CREATE TABLE IF NOT EXISTS productos(
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      codigo TEXT UNIQUE NOT NULL, nombre TEXT NOT NULL,
-      descripcion TEXT NOT NULL, precio REAL NOT NULL CHECK(precio>=0),
-      categoria_id INTEGER NOT NULL REFERENCES categorias(id),
-      estado TEXT NOT NULL DEFAULT 'PENDIENTE',
-      imagen_estado TEXT)""")
+    if use_pg:
+        db_exec("""CREATE TABLE IF NOT EXISTS categorias(
+          id SERIAL PRIMARY KEY, nombre TEXT UNIQUE NOT NULL)""")
+        db_exec("""CREATE TABLE IF NOT EXISTS productos(
+          id SERIAL PRIMARY KEY,
+          codigo TEXT UNIQUE NOT NULL, nombre TEXT NOT NULL,
+          descripcion TEXT NOT NULL, precio NUMERIC NOT NULL CHECK(precio>=0),
+          categoria_id INT NOT NULL REFERENCES categorias(id),
+          estado TEXT NOT NULL DEFAULT 'PENDIENTE',
+          imagen_estado TEXT)""")
+    else:
+        db_exec("""CREATE TABLE IF NOT EXISTS categorias(
+          id INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT UNIQUE NOT NULL)""")
+        db_exec("""CREATE TABLE IF NOT EXISTS productos(
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          codigo TEXT UNIQUE NOT NULL, nombre TEXT NOT NULL,
+          descripcion TEXT NOT NULL, precio REAL NOT NULL CHECK(precio>=0),
+          categoria_id INTEGER NOT NULL REFERENCES categorias(id),
+          estado TEXT NOT NULL DEFAULT 'PENDIENTE',
+          imagen_estado TEXT)""")
     for c in ["teclados", "pantallas", "audio"]:
         try:
-            db_exec("INSERT INTO categorias(nombre) VALUES(?)", (c,))
+            if use_pg:
+                db_exec("INSERT INTO categorias(nombre) VALUES(?) ON CONFLICT DO NOTHING", (c,))
+            else:
+                db_exec("INSERT INTO categorias(nombre) VALUES(?)", (c,))
         except Exception:
             pass
 
@@ -183,7 +197,9 @@ def invocar_lambda_thumb(pid, orig_key):
     payload = {"producto_id": str(pid), "bucket_original": S3_ORIG, "key_original": orig_key,
                "bucket_thumb": S3_THUMB, "key_thumb": thumb_key(pid)}
     try:
-        lam = aws_client("lambda")
+        lam = boto3.client("lambda", region_name=AWS_REGION, endpoint_url=ENDPOINT,
+            aws_access_key_id="test", aws_secret_access_key="test",
+            config=BotoConfig(connect_timeout=5, read_timeout=180, retries={"max_attempts": 0}))
         r = lam.invoke(FunctionName=LAMBDA_FN, Payload=json.dumps(payload))
         data = r["Payload"].read()
         try:

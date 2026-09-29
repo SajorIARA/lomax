@@ -1,0 +1,5 @@
+ id | codigo |  estado   | imagen_estado 
+----+--------+-----------+---------------
+  1 | T01    | PUBLICADO | OK
+(1 row)
+

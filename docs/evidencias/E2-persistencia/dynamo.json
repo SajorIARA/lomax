@@ -1,0 +1,17 @@
+{
+    "Item": {
+        "producto_id": {
+            "S": "1"
+        },
+        "atributos": {
+            "M": {
+                "switch": {
+                    "S": "blue"
+                },
+                "teclas": {
+                    "N": "87"
+                }
+            }
+        }
+    }
+}
