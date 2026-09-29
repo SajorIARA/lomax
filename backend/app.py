@@ -33,19 +33,24 @@ lite = sqlite3.connect("/tmp/lomax.db", check_same_thread=False)
 lite.row_factory = sqlite3.Row
 
 def db_exec(q, params=(), fetch=None):
-    """q con %s para pg y ? para sqlite: escribimos con ? y convertimos si pg."""
+    """q con ? (se convierte a %s en pg). En pg se abre conexión por llamada para sobrevivir a reinicios de Floci."""
     if use_pg:
-        import psycopg2.extras
-        cur = pg_conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        cur.execute(q.replace("?", "%s"), params)
-        if fetch == "one":
-            return cur.fetchone()
-        if fetch == "all":
-            return cur.fetchall()
+        import psycopg2, psycopg2.extras
+        conn = psycopg2.connect(DATABASE_URL, connect_timeout=5)
         try:
-            return cur.fetchone()
-        except Exception:
-            return None
+            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            cur.execute(q.replace("?", "%s"), params)
+            conn.commit()
+            if fetch == "one":
+                return cur.fetchone()
+            if fetch == "all":
+                return cur.fetchall()
+            try:
+                return cur.fetchone()
+            except Exception:
+                return None
+        finally:
+            conn.close()
     else:
         cur = lite.cursor()
         cur.execute(q, params)
