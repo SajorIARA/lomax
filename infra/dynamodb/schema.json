@@ -1,0 +1,1 @@
+{"TableName":"lomax-atributos","KeySchema":[{"AttributeName":"producto_id","KeyType":"HASH"}],"AttributeDefinitions":[{"AttributeName":"producto_id","AttributeType":"S"}],"BillingMode":"PAY_PER_REQUEST"}

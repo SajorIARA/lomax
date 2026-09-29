@@ -1,0 +1,16 @@
+## health
+{"db":"sqlite","status":"ok"}
+
+## duplicado 409
+503
+## precio negativo 400
+400
+## categoria inexistente 400
+400
+## formato 415
+415
+## 404 producto
+404
+## 404 imagen
+404
+## thumb 300x200 verificado arriba

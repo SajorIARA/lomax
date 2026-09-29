@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: lomax-backend}
+spec:
+  replicas: 3
+  selector: {matchLabels: {app: lomax-backend}}
+  template:
+    metadata: {labels: {app: lomax-backend}}
+    spec:
+      containers:
+      - name: backend
+        image: 000000000000.dkr.ecr.us-east-1.localhost:4566/lomax-backend:latest
+        ports: [{containerPort: 3000}]
+        env: [{name: AWS_ENDPOINT_URL, value: "http://floci:4566"}]
+---
+apiVersion: v1
+kind: Service
+metadata: {name: lomax-backend}
+spec:
+  selector: {app: lomax-backend}
+  ports: [{port: 3000}]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: lomax-frontend}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: lomax-frontend}}
+  template:
+    metadata: {labels: {app: lomax-frontend}}
+    spec:
+      containers:
+      - name: frontend
+        image: 000000000000.dkr.ecr.us-east-1.localhost:4566/lomax-frontend:latest
+        ports: [{containerPort: 80}]
+---
+apiVersion: v1
+kind: Service
+metadata: {name: lomax-frontend}
+spec:
+  selector: {app: lomax-frontend}
+  ports: [{port: 80}]

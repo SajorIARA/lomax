@@ -1,0 +1,11 @@
+.env
+floci-data/
+infra/floci/data/
+*.pyc
+__pycache__/
+node_modules/
+datos/imagenes/*.jpg
+datos/imagenes/*.png
+!datos/imagenes/.gitkeep
+*.log
+.DS_Store

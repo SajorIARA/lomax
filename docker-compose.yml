@@ -1,0 +1,83 @@
+services:
+  floci:
+    image: ${FLOCI_IMAGE:-floci/floci:latest}
+    container_name: lomax-floci
+    expose:
+      - "4566"
+      - "7001-7099"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - floci-data:/app/data
+    environment:
+      FLOCI_STORAGE_MODE: ${FLOCI_STORAGE_MODE:-persistent}
+      FLOCI_STORAGE_PERSISTENT_PATH: /app/data
+      FLOCI_SERVICES_DOCKER_NETWORK: lomax_lomax_net
+      FLOCI_SERVICES_EKS_DOCKER_NETWORK: lomax_lomax_net
+      FLOCI_SERVICES_RDS_PROXY_BASE_PORT: "7001"
+      FLOCI_SERVICES_RDS_PROXY_MAX_PORT: "7099"
+    networks:
+      - lomax_net
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    container_name: lomax-backend
+    expose:
+      - "3000"
+    env_file: .env
+    environment:
+      AWS_ENDPOINT_URL: http://floci:4566
+      AWS_REGION: ${AWS_REGION:-us-east-1}
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+    depends_on:
+      - floci
+    networks:
+      - lomax_net
+
+  frontend:
+    build: ./frontend
+    container_name: lomax-frontend
+    expose:
+      - "80"
+    networks:
+      - lomax_net
+    depends_on:
+      - backend
+
+  proxy:
+    build: ./proxy
+    container_name: lomax-proxy
+    ports:
+      - "${PROXY_HOST_PORT:-8080}:80"
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - lomax_net
+
+  tools:
+    build: ./tools
+    container_name: lomax-tools
+    env_file: .env
+    environment:
+      AWS_ENDPOINT_URL: http://floci:4566
+      AWS_DEFAULT_REGION: ${AWS_REGION:-us-east-1}
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+    volumes:
+      - ./:/trabajo
+      - /var/run/docker.sock:/var/run/docker.sock
+    working_dir: /trabajo
+    depends_on:
+      - floci
+    networks:
+      - lomax_net
+    tty: true
+
+networks:
+  lomax_net:
+    driver: bridge
+
+volumes:
+  floci-data:
