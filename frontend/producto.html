@@ -1,1 +1,42 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Detalle - Lomax</title></head><body><a href="/">← Catálogo</a><div id="d"></div><script>const id=new URLSearchParams(location.search).get('id');fetch('/api/productos/'+id).then(r=>r.json()).then(p=>{document.getElementById('d').innerHTML=`<h1>${p.nombre}</h1><img src="/api/productos/${p.id}/imagen?tipo=thumb" style="max-width:300px"><p>${p.descripcion}</p><p><b>$${p.precio}</b> · ${p.categoria} · ${p.estado}</p><pre>${JSON.stringify(p.atributos,null,2)}</pre><img src="/api/productos/${p.id}/imagen" style="max-width:600px"><p><small>código: ${p.codigo}</small></p>`})</script></body></html>
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Detalle · Lomax SA</title>
+<style>
+:root{--bg:#0f1420;--card:#1a2440;--line:#2b3a5c;--txt:#eef2ff;--mut:#9fb0d0;--acc:#ffb020;--acc2:#ff7847}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--txt)}
+.wrap{max-width:1000px;margin:auto;padding:22px 20px 40px}
+.back{color:var(--acc);text-decoration:none;font-weight:700}
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:16px}
+@media(max-width:800px){.hero{grid-template-columns:1fr}}
+.pic{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.pic img{width:100%;display:block;max-height:420px;object-fit:cover;background:#0b1120}
+.info{background:linear-gradient(180deg,#22304f,#1a2440);border:1px solid var(--line);border-radius:20px;padding:24px}
+.badge{display:inline-block;font-size:12px;font-weight:800;padding:6px 12px;border-radius:999px;background:#22c55e22;color:#4ade80;border:1px solid #22c55e55}
+.badge.pend{background:#f59e0b22;color:#fbbf24;border-color:#f59e0b55}
+.info h1{margin:10px 0 4px;font-size:30px}.code{color:var(--mut);font-size:13px}
+.price{font-size:32px;font-weight:900;margin:12px 0;background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.desc{color:#d5def5;line-height:1.6}
+pre{background:#0b1120;border:1px solid var(--line);border-radius:14px;padding:14px;overflow:auto;color:#c9f5d6;font-size:13px}
+h3{color:var(--acc)}
+</style>
+</head>
+<body>
+<div class="wrap"><a class="back" href="/">← Volver al catálogo</a><div id="d">Cargando…</div></div>
+<script>
+const id=new URLSearchParams(location.search).get('id');
+fetch('/api/productos/'+id).then(r=>{if(!r.ok)throw 0;return r.json()}).then(p=>{
+ const pub=p.estado==='PUBLICADO';
+ document.getElementById('d').innerHTML=`<div class="hero">
+  <div class="pic"><img src="/api/productos/${p.id}/imagen?tipo=thumb" onerror="this.src='/api/productos/${p.id}/imagen'"></div>
+  <div class="info"><span class="badge ${pub?'':'pend'}">${p.estado}</span>
+   <h1>${p.nombre}</h1><div class="code">${p.codigo} · ${p.categoria}</div>
+   <div class="price">$${p.precio}</div><p class="desc">${p.descripcion}</p>
+   <h3>Atributos</h3><pre>${JSON.stringify(p.atributos,null,2)}</pre></div></div>
+  <h3>Imagen original</h3><div class="pic"><img src="/api/productos/${p.id}/imagen"></div>`;
+}).catch(()=>{document.getElementById('d').innerHTML='<p>Producto no encontrado (404).</p>'});
+</script>
+</body>
+</html>

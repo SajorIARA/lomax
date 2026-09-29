@@ -1,1 +1,43 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lomax SA - Catálogo</title><style>body{font-family:system-ui;margin:0}header{background:#111;color:#fff;padding:12px 20px;display:flex;justify-content:space-between}a{color:#0b5fff}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;padding:20px}.card{border:1px solid #ddd;border-radius:10px;overflow:hidden}.card img{width:100%;height:150px;object-fit:cover;background:#eee}.card div{padding:10px}</style></head><body><header><b>Lomax SA</b><nav><a style="color:#fff" href="/">Catálogo</a> | <a style="color:#fff" href="/nuevo.html">Registrar</a></nav></header><main><h2 style="padding:0 20px">Catálogo (solo PUBLICADOS)</h2><div id="grid" class="grid"></div></main><script>fetch('/api/productos').then(r=>r.json()).then(ps=>{const g=document.getElementById('grid');g.innerHTML=ps.map(p=>`<div class="card"><img src="${p.miniatura}" loading="lazy"><div><b>${p.nombre}</b><br>$${p.precio} · ${p.categoria}<br><a href="/producto.html?id=${p.id}">Ver detalle</a></div></div>`).join('')||'<p style="padding:20px">Sin publicados</p>'})</script></body></html>
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lomax SA · Catálogo</title>
+<style>
+:root{--bg:#0f1420;--bg2:#171f31;--card:#1d2740;--line:#2b3a5c;--txt:#eef2ff;--mut:#9fb0d0;--acc:#ffb020;--acc2:#ff7847;--ok:#22c55e}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;background:radial-gradient(1200px 500px at 80% -10%,#24365e 0%,var(--bg) 55%) fixed,var(--bg);color:var(--txt)}
+.top{position:sticky;top:0;z-index:5;backdrop-filter:blur(10px);background:rgba(15,20,32,.85);border-bottom:1px solid var(--line)}
+.top-in{max-width:1100px;margin:auto;display:flex;align-items:center;gap:14px;padding:14px 20px}
+.logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--acc),var(--acc2));display:grid;place-items:center;font-weight:900;color:#231400;font-size:20px}
+.brand b{font-size:18px;letter-spacing:.5px}.brand small{display:block;color:var(--mut);font-size:12px}
+.sp{flex:1}.btn{border:1px solid var(--line);background:var(--bg2);color:var(--txt);padding:10px 16px;border-radius:999px;text-decoration:none;font-weight:600}.btn.pri{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#231400;border:0}
+.hero{max-width:1100px;margin:auto;padding:38px 20px 8px}.hero h1{margin:0;font-size:clamp(28px,4vw,44px)}.hero h1 span{background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--mut);max-width:640px}
+.stats{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}.chip{background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-size:13px;color:var(--mut)}.chip b{color:var(--txt)}
+.grid{max-width:1100px;margin:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;padding:20px}
+.card{background:linear-gradient(180deg,#22304f,var(--card));border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:.2s}
+.card:hover{transform:translateY(-4px);border-color:var(--acc)}
+.card img{width:100%;height:170px;object-fit:cover;background:#0b1120;display:block}
+.pad{padding:14px 16px 16px}.cat{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--acc);font-weight:700}
+.pad h3{margin:6px 0;font-size:17px}.price{font-size:20px;font-weight:800}.row{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.link{color:var(--acc);font-weight:700;text-decoration:none}
+.empty{max-width:1100px;margin:auto;padding:40px 20px;color:var(--mut)}
+footer{border-top:1px solid var(--line);color:var(--mut);text-align:center;padding:22px;font-size:13px}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in"><div class="logo">L</div><div class="brand"><b>Lomax SA</b><small>Catálogo · solo PUBLICADOS</small></div><div class="sp"></div><a class="btn" href="/">Catálogo</a><a class="btn pri" href="/nuevo.html">+ Registrar</a></div></header>
+<section class="hero"><h1>Equipos que se ven <span>tan bien como rinden</span></h1><p>Teclados, pantallas y audio con foto real, miniatura 300×300 y atributos verificados en DynamoDB.</p><div class="stats"><span class="chip">● <b id="n">0</b> publicados</span><span class="chip">3 categorías</span><span class="chip">Miniatura proporcional</span></div></section>
+<main><div id="grid" class="grid"></div><div id="empty" class="empty" hidden>Sin publicados todavía. <a class="link" href="/nuevo.html">Registra el primero →</a></div></main>
+<footer>Lomax SA · Flujo PENDIENTE → PUBLICADO · RDS + DynamoDB + S3 + Lambda</footer>
+<script>
+fetch('/api/productos').then(r=>r.json()).then(ps=>{
+ document.getElementById('n').textContent=ps.length;
+ const g=document.getElementById('grid');
+ if(!ps.length){document.getElementById('empty').hidden=false;return;}
+ g.innerHTML=ps.map(p=>`<article class="card"><img src="${p.miniatura}" loading="lazy" onerror="this.style.display='none'"><div class="pad"><span class="cat">${p.categoria}</span><h3>${p.nombre}</h3><div class="price">$${p.precio}</div><div class="row"><small style="color:var(--mut)">${p.codigo}</small><a class="link" href="/producto.html?id=${p.id}">Ver detalle →</a></div></div></article>`).join('');
+}).catch(()=>{document.getElementById('empty').hidden=false;});
+</script>
+</body>
+</html>

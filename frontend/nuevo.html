@@ -1,1 +1,52 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Registrar - Lomax</title></head><body><a href="/">← Catálogo</a><h1>Registrar producto</h1><form id="f"><input name="codigo" placeholder="código único" required><input name="nombre" placeholder="nombre" required><input name="descripcion" placeholder="descripción" required><input name="precio" type="number" step="0.01" min="0" placeholder="precio" required><select name="categoria"><option>teclados</option><option>pantallas</option><option>audio</option></select><textarea name="atributos" placeholder='{"switch":"blue"}'></textarea><input type="file" name="file" accept=".jpg,.jpeg,.png"><button>Guardar</button></form><pre id="out"></pre><script>document.getElementById('f').onsubmit=async e=>{e.preventDefault();const fd=new FormData(e.target);const body={codigo:fd.get('codigo'),nombre:fd.get('nombre'),descripcion:fd.get('descripcion'),precio:parseFloat(fd.get('precio')),categoria:fd.get('categoria'),atributos:JSON.parse(fd.get('atributos')||'{}')};let r=await fetch('/api/productos',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});let j=await r.json();document.getElementById('out').textContent=r.status+' '+JSON.stringify(j);if(j.producto_id&&fd.get('file').size){const f2=new FormData();f2.append('file',fd.get('file'));let r2=await fetch('/api/productos/'+j.producto_id+'/imagen',{method:'POST',body:f2});document.getElementById('out').textContent+='\n'+r2.status+' '+JSON.stringify(await r2.json())}}</script></body></html>
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Registrar · Lomax SA</title>
+<style>
+:root{--bg:#0f1420;--card:#1a2440;--line:#2b3a5c;--txt:#eef2ff;--mut:#9fb0d0;--acc:#ffb020;--acc2:#ff7847}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:radial-gradient(900px 400px at 20% 0%,#24365e,transparent),var(--bg);color:var(--txt)}
+.wrap{max-width:720px;margin:auto;padding:24px 20px 50px}
+.back{color:var(--acc);text-decoration:none;font-weight:700}
+.card{margin-top:16px;background:linear-gradient(180deg,#22304f,#18223c);border:1px solid var(--line);border-radius:22px;padding:28px}
+h1{margin:0 0 4px;font-size:30px}p.sub{color:var(--mut);margin-top:0}
+label{display:block;font-size:13px;color:var(--mut);margin:14px 0 6px;font-weight:700}
+input,select,textarea{width:100%;background:#0b1120;border:1px solid var(--line);color:var(--txt);border-radius:12px;padding:12px;font-size:15px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--acc);border-color:var(--acc)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:600px){.grid2{grid-template-columns:1fr}}
+button{margin-top:20px;width:100%;border:0;border-radius:14px;padding:14px;font-size:17px;font-weight:900;color:#231400;background:linear-gradient(135deg,var(--acc),var(--acc2));cursor:pointer}
+button:hover{filter:brightness(1.07)}
+#out{margin-top:16px;background:#0b1120;border:1px solid var(--line);border-radius:12px;padding:12px;font-size:13px;white-space:pre-wrap;min-height:60px;color:#c9f5d6}
+.hint{font-size:12px;color:var(--mut)}
+</style>
+</head>
+<body>
+<div class="wrap"><a class="back" href="/">← Catálogo</a>
+<div class="card"><h1>Registrar producto</h1><p class="sub">Crea en <b>PENDIENTE</b> y sube foto JPEG/PNG ≤ 5 MB para publicar.</p>
+<form id="f">
+<label>Código único</label><input name="codigo" required placeholder="T01">
+<div class="grid2"><div><label>Nombre</label><input name="nombre" required placeholder="Teclado Pro"></div><div><label>Precio (≥ 0)</label><input name="precio" type="number" step="0.01" min="0" required placeholder="59.90"></div></div>
+<label>Descripción</label><input name="descripcion" required placeholder="Mecánico switch blue">
+<div class="grid2"><div><label>Categoría</label><select name="categoria"><option>teclados</option><option>pantallas</option><option>audio</option></select></div><div><label>Foto</label><input type="file" name="file" accept=".jpg,.jpeg,.png"></div></div>
+<label>Atributos JSON (2 conjuntos: teclados / pantallas)</label><textarea name="atributos" rows="3" placeholder='{"switch":"blue","teclas":87}'>{"switch":"blue","teclas":87}</textarea>
+<p class="hint">Pantallas ej: {"pulgadas":27,"resolucion":"2560x1440"}</p>
+<button>Guardar y publicar →</button>
+</form><div id="out">Listo para registrar…</div></div></div>
+<script>
+document.getElementById('f').onsubmit=async e=>{
+ e.preventDefault();const fd=new FormData(e.target);const out=document.getElementById('out');
+ out.textContent='Guardando…';
+ let attrs={};try{attrs=JSON.parse(fd.get('atributos')||'{}')}catch{out.textContent='400 · atributos JSON inválido';return}
+ const body={codigo:fd.get('codigo'),nombre:fd.get('nombre'),descripcion:fd.get('descripcion'),precio:parseFloat(fd.get('precio')),categoria:fd.get('categoria'),atributos:attrs};
+ let r=await fetch('/api/productos',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+ let j=await r.json();out.textContent=r.status+' · '+JSON.stringify(j);
+ if((r.status===201||r.status===503)&&j.producto_id&&fd.get('file').size){
+  out.textContent+='\nSubiendo imagen…';
+  const f2=new FormData();f2.append('file',fd.get('file'));
+  let r2=await fetch('/api/productos/'+j.producto_id+'/imagen',{method:'POST',body:f2});
+  out.textContent+='\n'+r2.status+' · '+JSON.stringify(await r2.json());}
+};
+</script>
+</body>
+</html>
