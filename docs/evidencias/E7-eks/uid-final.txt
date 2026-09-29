@@ -1,4 +1,8 @@
-lomax-backend-775dd6bcdb-2twm9 uid=e46c44d8-7544-4e6f-9b29-cffe9222100b
-lomax-backend-775dd6bcdb-vd4h8 uid=5e02d3c0-3a36-4231-b57f-5e233f078a24
-lomax-backend-775dd6bcdb-wxctm uid=d78199ab-5da7-4623-bfe5-76a26abbfbd0
-lomax-frontend-6cb66f7445-dlbgd uid=c047ba40-93f5-4061-a499-3488440be015
+lomax-backend-6fbfbc5997-rmq4l uid=bddb935f-bbbe-4078-8cb1-0b62a39f9a1e Running
+lomax-backend-6fbfbc5997-vwnh2 uid=6cb33ade-3dc6-45e8-b54c-dd06d1093c40 Running
+lomax-backend-6fbfbc5997-zr6lc uid=aa643ca8-58a1-4058-9411-3ba31224c138 Running
+lomax-backend-775dd6bcdb-2twm9 uid=e46c44d8-7544-4e6f-9b29-cffe9222100b Running
+lomax-backend-775dd6bcdb-vd4h8 uid=5e02d3c0-3a36-4231-b57f-5e233f078a24 Running
+lomax-backend-775dd6bcdb-wxctm uid=d78199ab-5da7-4623-bfe5-76a26abbfbd0 Running
+lomax-frontend-6cb66f7445-dlbgd uid=c047ba40-93f5-4061-a499-3488440be015 Running
+lomax-frontend-74757dddf8-kgnpl uid=025d9afa-cb4c-470a-9247-992be8832bb7 Running
