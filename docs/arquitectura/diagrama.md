@@ -3,7 +3,7 @@
 ```mermaid
 flowchart TB
     subgraph Client["CAPA CLIENTE"]
-        User(["<b>Usuario</b><br/>navegador :8080"])
+        User(["<img src='https://cdn-icons-png.flaticon.com/512/847/847969.png' width='45'/><br/><b>Usuario</b><br/>navegador :8080"])
     end
 
     subgraph Lomax["DOCKER COMPOSE · red lomax_net"]
@@ -17,12 +17,12 @@ flowchart TB
     end
 
     subgraph Floci["FLOCI :4566 + hijos Docker"]
-        S3[("S3<br/>originales<br/>miniaturas")]
-        DDB[("DynamoDB<br/>atributos")]
-        Lam["Lambda<br/>thumbnail 300x300"]
-        RDS[("RDS Postgres :7001<br/>PENDIENTE/PUBLICADO")]
-        ECR["ECR<br/>registry:2"]
-        EKS["EKS k3s :650x<br/>3x backend + frontend"]
+        S3[("<img src='https://icon.icepanel.io/AWS/svg/Storage/Simple-Storage-Service.svg' width='50'/><br/><b>Amazon S3</b><br/>originales + miniaturas")]
+        DDB[("<img src='https://icon.icepanel.io/AWS/svg/Database/DynamoDB.svg' width='50'/><br/><b>DynamoDB</b><br/>atributos")]
+        Lam["<img src='https://icon.icepanel.io/AWS/svg/Compute/Lambda.svg' width='50'/><br/><b>AWS Lambda</b><br/>thumbnail 300x300"]
+        RDS[("<img src='https://icon.icepanel.io/AWS/svg/Database/RDS.svg' width='50'/><br/><b>Amazon RDS</b><br/>Postgres :7001<br/>PENDIENTE/PUBLICADO")]
+        ECR["<img src='https://icon.icepanel.io/AWS/svg/Containers/Elastic-Container-Registry.svg' width='50'/><br/><b>Amazon ECR</b><br/>registry:2"]
+        EKS["<img src='https://icon.icepanel.io/AWS/svg/Containers/Elastic-Kubernetes-Service.svg' width='50'/><br/><b>Amazon EKS</b><br/>k3s :650x<br/>3x backend + frontend"]
         Back --> S3
         Back --> DDB
         Back -->|invoke| Lam
