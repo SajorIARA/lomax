@@ -2,80 +2,42 @@
 
 ```mermaid
 flowchart TB
-
-    %% ============================================================
-    %% CLIENT TIER
-    %% ============================================================
-    subgraph ClientTier["CAPA CLIENTE"]
-        direction LR
-        User["<img src='https://cdn-icons-png.flaticon.com/512/847/847969.png' width='50'/><br/><b>Usuario</b>"]
-        Dashboard["<img src='https://imgs.search.brave.com/R3vnbkScZlNFy0TM7czDEZQcRCkPCxheAjIaXfb0b_0/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wMjAv/ODc4Lzg2Ni9zbWFs/bC9kYXNoYm9hcmQt/aWNvbi1zdHlsZS1m/cmVlLXZlY3Rvci5q/cGc' width='50'/><br/><b>Dashboard Web</b><br/>Generador / Monitoreo"]
-        User -->|"Accede"| Dashboard
+    subgraph Client["CAPA CLIENTE"]
+        User(["<b>Usuario</b><br/>navegador :8080"])
     end
 
-    %% ============================================================
-    %% AWS CLOUD
-    %% ============================================================
-    subgraph AWS["AWS CLOUD"]
-        
-        %% CAPA RED / BALANCEO
-        subgraph IngressTier["CAPA ENTRADA & BALANCEO"]
-            ALB["<img src='https://imgs.search.brave.com/Hy1NGDZN9_iPRvEy63I9lZA7Mtoise_joHC8KscXYxM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zeW1i/b2xzLmdldHZlY3Rh/LmNvbS9zdGVuY2ls/XzkvMzlfbG9hZC1i/YWxhbmNlci5hZjdk/NDQ5NWJhLnN2Zw' width='55'/><br/><b>Application Load Balancer</b>"]
-            TG["<b>Target Group</b><br/>tg-citas"]
-            ALB --> TG
-        end
-
-        %% CAPA COMPUTO (ECS)
-        subgraph ECSCluster["AMAZON ECS CLUSTER"]
-            Service["<img src='https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/aws-ecs.svg' width='55'/><br/><b>ECS Service</b><br/>servicio-citas"]
-            
-            subgraph TasksPool["Tasks Pool (Scale 1 to 5)"]
-                direction LR
-                T1["Task 1"]
-                T2["Task 2"]
-                T3["Task 3"]
-                T4["Task 4"]
-                T5["Task 5"]
-            end
-            
-            Service --- TasksPool
-        end
-
-        %% SERVICIOS AUXILIARES
-        subgraph Management["GESTIÓN & DESPLIEGUE"]
-            direction LR
-            ECR["<img src='https://icon.icepanel.io/AWS/svg/Containers/Elastic-Container-Registry.svg' width='45'/><br/><b>Amazon ECR</b><br/>backend-citas"]
-            CW["<img src='https://icon.icepanel.io/AWS/svg/Management-Governance/CloudWatch.svg' width='45'/><br/><b>CloudWatch</b>"]
-            ASG["<img src='https://icon.icepanel.io/AWS/svg/Management-Governance/Auto-Scaling.svg' width='45'/><br/><b>Auto Scaling</b>"]
-            
-            CW -->|"Métrica"| ASG
-        end
-
+    subgraph Lomax["DOCKER COMPOSE · red lomax_net"]
+        Proxy["<b>proxy</b> nginx :80<br/>único puerto al host 8080"]
+        Front["<b>frontend</b> nginx<br/>3 vistas"]
+        Back["<b>backend</b> Flask :3000<br/>7 endpoints"]
+        Tools["<b>tools</b><br/>aws cli + psql"]
+        User -->|"HTTP"| Proxy
+        Proxy -->|"/"| Front
+        Proxy -->|"/api/"| Back
     end
 
-    %% ============================================================
-    %% CONEXIONES PRINCIPALES (FLUJO SIMPLIFICADO)
-    %% ============================================================
-    Dashboard ==>|"HTTP GET /api/hora"| ALB
-    
-    TG -->|"Balancea peticiones"| TasksPool
-    TasksPool -.->|"Respuesta HTTP"| ALB
+    subgraph Floci["FLOCI :4566 + hijos Docker"]
+        S3[("S3<br/>originales<br/>miniaturas")]
+        DDB[("DynamoDB<br/>atributos")]
+        Lam["Lambda<br/>thumbnail 300x300"]
+        RDS[("RDS Postgres :7001<br/>PENDIENTE/PUBLICADO")]
+        ECR["ECR<br/>registry:2"]
+        EKS["EKS k3s :650x<br/>3x backend + frontend"]
+        Back --> S3
+        Back --> DDB
+        Back -->|invoke| Lam
+        Lam --> S3
+        Back --> RDS
+        ECR -->|"pull (mirror)"| EKS
+        EKS -->|"pg :7001<br/>:4566"| Back
+    end
 
-    ECR -.->|"Pulls Image"| Service
-    ASG -->|"Escala Tasks"| Service
-
-    %% ============================================================
-    %% ESTILOS
-    %% ============================================================
     classDef client fill:#F8F9FA,stroke:#232F3E,stroke-width:2px,color:#232F3E;
-    classDef alb fill:#FFFFFF,stroke:#8C4FFF,stroke-width:2px,color:#232F3E;
-    classDef compute fill:#FFFFFF,stroke:#FF9900,stroke-width:2px,color:#232F3E;
-    classDef aux fill:#FFFFFF,stroke:#00A4A6,stroke-width:2px,color:#232F3E;
-
-    class User,Dashboard client;
-    class ALB,TG alb;
-    class Service,T1,T2,T3,T4,T5 compute;
-    class ECR,CW,ASG aux;
+    classDef app fill:#FFFFFF,stroke:#FF9900,stroke-width:2px,color:#232F3E;
+    classDef aws fill:#FFFFFF,stroke:#00A4A6,stroke-width:2px,color:#232F3E;
+    class User client;
+    class Proxy,Front,Back,Tools app;
+    class S3,DDB,Lam,RDS,ECR,EKS aws;
 ```
 
 - Red `lomax_net`, volumen `floci-data`. Solo proxy publica al host (:8080); Floci :4566 publicado solo por el data-plane ECR que usa el daemon.
