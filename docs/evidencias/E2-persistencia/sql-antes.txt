@@ -1,0 +1,29 @@
+ id | codigo |       nombre       | precio |  estado   | imagen_estado 
+----+--------+--------------------+--------+-----------+---------------
+  1 | T01    | Teclado Pro 1      |   59.9 | PUBLICADO | OK
+  3 | T02    | Teclado Pro 2      |   69.9 | PUBLICADO | OK
+  4 | T03    | Teclado Mini       |   79.9 | PUBLICADO | OK
+  5 | T04    | Teclado Ergo       |   89.9 | PUBLICADO | OK
+  6 | T05    | Teclado Gamer      |   99.9 | PUBLICADO | OK
+  7 | T06    | Teclado Office     |   49.9 | PUBLICADO | OK
+  8 | T07    | Teclado Retro      |  109.9 | PUBLICADO | OK
+  9 | P01    | Pantalla 24 1      |  149.9 | PUBLICADO | OK
+ 10 | P02    | Pantalla 27        |  249.9 | PUBLICADO | OK
+ 11 | P03    | Pantalla 32        |  399.9 | PUBLICADO | OK
+ 12 | P04    | Pantalla 24 2      |  129.9 | PUBLICADO | OK
+ 13 | P05    | Pantalla Ultrawide |  499.9 | PUBLICADO | OK
+ 14 | P06    | Pantalla Touch     |  299.9 | PUBLICADO | OK
+ 15 | P07    | Pantalla Curva     |  279.9 | PUBLICADO | OK
+ 16 | A01    | Audífono Bass      |   39.9 | PUBLICADO | OK
+ 17 | A02    | Parlante Mini      |   29.9 | PUBLICADO | OK
+ 18 | A03    | Audífono Pro       |   89.9 | PUBLICADO | OK
+ 19 | A04    | Parlante Torre     |   59.9 | PUBLICADO | OK
+ 20 | A05    | Micrófono USB      |   49.9 | PUBLICADO | OK
+ 21 | A06    | Audífono Gamer     |   69.9 | PUBLICADO | OK
+(20 rows)
+
+ total 
+-------
+    20
+(1 row)
+

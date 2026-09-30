@@ -1,0 +1,16 @@
+== 1. válido (201) ==
+{"estado":"PENDIENTE","producto_id":24}
+
+HTTP:201
+== 2. código duplicado (409) ==
+{"error":"c\u00f3digo duplicado","producto_id":1}
+
+HTTP:409
+== 3. precio negativo (400) ==
+{"error":"precio no negativo"}
+
+HTTP:400
+== 4. categoría inexistente (400) ==
+{"error":"categor\u00eda inexistente"}
+
+HTTP:400

@@ -1,0 +1,10 @@
+{
+    "Item": {
+        "producto_id": {
+            "S": "1"
+        },
+        "atributos": {
+            "M": {}
+        }
+    }
+}

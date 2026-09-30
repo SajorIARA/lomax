@@ -1,0 +1,50 @@
+ id | codigo | precio |  estado   
+----+--------+--------+-----------
+  1 | T01    |   59.9 | PUBLICADO
+  3 | T02    |   69.9 | PUBLICADO
+  4 | T03    |   79.9 | PUBLICADO
+  5 | T04    |   89.9 | PUBLICADO
+  6 | T05    |   99.9 | PUBLICADO
+  7 | T06    |   49.9 | PUBLICADO
+  8 | T07    |  109.9 | PUBLICADO
+  9 | P01    |  149.9 | PUBLICADO
+ 10 | P02    |  249.9 | PUBLICADO
+ 11 | P03    |  399.9 | PUBLICADO
+ 12 | P04    |  129.9 | PUBLICADO
+ 13 | P05    |  499.9 | PUBLICADO
+ 14 | P06    |  299.9 | PUBLICADO
+ 15 | P07    |  279.9 | PUBLICADO
+ 16 | A01    |   39.9 | PUBLICADO
+ 17 | A02    |   29.9 | PUBLICADO
+ 18 | A03    |   89.9 | PUBLICADO
+ 19 | A04    |   59.9 | PUBLICADO
+ 20 | A05    |   49.9 | PUBLICADO
+ 21 | A06    |   69.9 | PUBLICADO
+ 24 | E2T1   |   10.5 | PENDIENTE
+(21 rows)
+
+[
+    "1",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "17",
+    "18",
+    "19",
+    "20",
+    "21",
+    "24",
+    "26",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9"
+]
+lomax-postgres	7001	available
