@@ -6,7 +6,7 @@ flowchart TB
         User(["<img src='https://cdn-icons-png.flaticon.com/512/847/847969.png' width='45'/><br/><b>Usuario</b><br/>navegador :8080"])
     end
 
-    subgraph Lomax["DOCKER COMPOSE · red lomax_net"]
+    subgraph Lomax["NUESTRA APP · imágenes propias (fuera de Floci)"]
         Proxy["<b>proxy</b> nginx :80<br/>único puerto al host 8080"]
         Front["<b>frontend</b> nginx<br/>3 vistas"]
         Back["<b>backend</b> Flask :3000<br/>7 endpoints"]
@@ -16,7 +16,7 @@ flowchart TB
         Proxy -->|"/api/"| Back
     end
 
-    subgraph Floci["FLOCI :4566 + hijos Docker"]
+    subgraph Floci["AWS EMULADO · contenedor Floci + hijos que él levanta"]
         S3[("<img src='https://icon.icepanel.io/AWS/svg/Storage/Simple-Storage-Service.svg' width='50'/><br/><b>Amazon S3</b><br/>originales + miniaturas")]
         DDB[("<img src='https://icon.icepanel.io/AWS/svg/Database/DynamoDB.svg' width='50'/><br/><b>DynamoDB</b><br/>atributos")]
         Lam["<img src='https://icon.icepanel.io/AWS/svg/Compute/Lambda.svg' width='50'/><br/><b>AWS Lambda</b><br/>thumbnail 300x300"]
